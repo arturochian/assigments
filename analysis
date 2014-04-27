@@ -1,4 +1,5 @@
 # 1. Merging
+# We are using read.table because it's the easiest and fastest way to deal with this data
 X_train <- read.table("train/X_train.txt")
 X_test <- read.table("test/X_test.txt")
 X <- rbind(X_train, X_test)
@@ -42,17 +43,20 @@ write.table(data, "cleaned_data.txt")
 uniqueSubjects = unique(S)[,1]
 numSubjects = length(unique(S)[,1])
 numActivities = length(activities[,1])
-numCols = dim(cleaned)[2]
-result = cleaned[1:(numSubjects*numActivities), ]
+numCols = dim(data)[2]
+result = data[1:(numSubjects*numActivities), ]
 
 row = 1
 for (s in 1:numSubjects) {
   for (a in 1:numActivities) {
     result[row, 1] = uniqueSubjects[s]
     result[row, 2] = activities[a, 2]
-    tmp <- cleaned[cleaned$subject==s & cleaned$activity==activities[a, 2], ]
+    tmp <- data[data$subject==s & data$activity==activities[a, 2], ]
     result[row, 3:numCols] <- colMeans(tmp[, 3:numCols])
     row = row+1
   }
 }
 write.table(result, "final_data.txt")
+#names(result) If you want to know the names of these variable 
+#head(result) or View(result) If you are corious about the data
+#sapply(result, class) the class of each variable
